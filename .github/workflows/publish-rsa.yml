@@ -30,6 +30,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.1.0
+       # with:
+          # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
+          # node-version: # optional
+
       - name: Install dependencies
         working-directory: ./RSA
         run: npm ci
