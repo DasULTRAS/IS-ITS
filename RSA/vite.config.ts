@@ -3,6 +3,8 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  plugins: [react()],
+
   server: {
     watch: {
       usePolling: true, // needed for wsl2
@@ -18,5 +20,5 @@ export default defineConfig({
     strictPort: true,
   },
 
-  plugins: [react()],
+  base: "/IS-ITS/",
 });
