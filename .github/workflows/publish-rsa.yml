@@ -61,6 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: production-files
+          path: ./
 
       - name: Deploy to GitHub Pages
         id: deployment
