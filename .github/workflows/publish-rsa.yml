@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy RSA React App to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -36,9 +36,11 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: cd ./RSA && npm ci
+        working-directory: ./RSA
+        run: npm ci
 
       - name: Build project
+        working-directory: ./RSA
         run: npm run build
 
       - name: Upload production-ready build files
@@ -49,6 +51,7 @@ jobs:
 
   # Single deploy job since we're just deploying
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
