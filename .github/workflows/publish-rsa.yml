@@ -33,6 +33,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         working-directory: ./RSA
@@ -41,6 +42,9 @@ jobs:
       - name: Build project
         working-directory: ./RSA
         run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
