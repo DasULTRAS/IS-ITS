@@ -11,7 +11,6 @@ export default function App() {
   const [g, setG] = useState(5); // Gemeinsamer Generator
 
   const [pValid, setPValid] = useState(true);
-  const [gValid, setGValid] = useState(true);
 
   // Zufällige private Schlüssel für Alice und Bob
   const [aPrivate, setAPrivate] = useState<number>(Math.floor(Math.random() * 100));
@@ -47,7 +46,6 @@ export default function App() {
 
     // Festlegung von g auf 5 (kann angepasst werden)
     setG(5);
-    setGValid(true);
 
     // Neue private Schlüssel generieren
     setAPrivate(Math.floor(Math.random() * 100));
