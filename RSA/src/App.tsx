@@ -1,26 +1,28 @@
 import { useState } from "react";
 import Instance from "./Instance";
 
+const MAX_NUMBER = 1_000;
+
 /**
  * Hauptkomponente für die Demonstration des Diffie-Hellman-Schlüsselaustauschs.
  *
  * @returns {JSX.Element} Die gerenderte App-Komponente.
  */
 export default function App() {
-  const [p, setP] = useState(23); // Gemeinsame Primzahl
-  const [g, setG] = useState(5); // Gemeinsamer Generator
+  const [p, setP] = useState<number>(5); // Gemeinsame Primzahl
+  const [g, setG] = useState<number>(25); // Gemeinsamer Generator
 
   const [pValid, setPValid] = useState(true);
 
-  // Zufällige private Schlüssel für Alice und Bob
-  const [aPrivate, setAPrivate] = useState<number>(Math.floor(Math.random() * 100));
-  const [bPrivate, setBPrivate] = useState<number>(Math.floor(Math.random() * 100));
+  // 1. Private Schlüssel
+  const [aPrivate, setAPrivate] = useState<number>(generateRandomNumber());
+  const [bPrivate, setBPrivate] = useState<number>(generateRandomNumber());
 
-  // Öffentliche Schlüssel
+  // 2. Öffentliche Schlüssel
   const aPublic = modPow(g, aPrivate, p);
   const bPublic = modPow(g, bPrivate, p);
 
-  // Gemeinsames Geheimnis
+  // 5. Gemeinsames Geheimnis
   const aSharedSecret = modPow(bPublic, aPrivate, p);
   const bSharedSecret = modPow(aPublic, bPrivate, p);
 
@@ -38,18 +40,15 @@ export default function App() {
 
   // Generierung gültiger Werte für p, g und die privaten Schlüssel
   const generateValues = () => {
-    // Zufällige Primzahl für p
-    const primes = [23, 29, 31, 37, 41, 43, 47, 53, 59, 61];
-    const randomP = primes[Math.floor(Math.random() * primes.length)];
-    setP(randomP);
+    setP(generateRandomPrime());
     setPValid(true);
 
     // Festlegung von g auf 5 (kann angepasst werden)
-    setG(5);
+    setG(generateRandomNumber());
 
     // Neue private Schlüssel generieren
-    setAPrivate(Math.floor(Math.random() * 100));
-    setBPrivate(Math.floor(Math.random() * 100));
+    setAPrivate(generateRandomNumber());
+    setBPrivate(generateRandomNumber());
   };
 
   return (
@@ -103,6 +102,10 @@ export default function App() {
   );
 }
 
+function generateRandomNumber(): number {
+  return Math.floor(Math.random() * MAX_NUMBER);
+}
+
 /**
  * Berechnet die modulare Exponentiation.
  *
@@ -142,4 +145,12 @@ function isPrime(n: number): boolean {
     if (n % i === 0 || n % (i + 2) === 0) return false;
   }
   return true;
+}
+
+function generateRandomPrime(): number {
+  let random;
+  do {
+    random = generateRandomNumber();
+  } while (!isPrime(random));
+  return random;
 }

@@ -12,12 +12,7 @@ export default defineConfig({
 
     host: true, // needed for the DC port mapping to work
     strictPort: true,
-    port: 8080,
-  },
-
-  preview: {
-    port: 8080,
-    strictPort: true,
+    port: 3000,
   },
 
   base: "/IS-ITS/",
