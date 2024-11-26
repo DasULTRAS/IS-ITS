@@ -1,8 +1,7 @@
 import { useState } from "react";
-import Instance from "./Instance";
-import Input from "../components/input";
 import LabelInput from "../components/input/LabelInput";
-import { modPow, isPrime } from "../utils/math";
+import { isPrime, modPow } from "../utils/math";
+import Instance from "./Instance";
 
 const MAX_NUMBER = 1_000;
 

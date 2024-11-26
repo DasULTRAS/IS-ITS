@@ -18,7 +18,7 @@ export function lcm(a: number, b: number): number {
 }
 
 export function modInverse(e: number, phi: number): number {
-  let m0 = phi;
+  const m0 = phi;
   let y = 0,
     x = 1;
 

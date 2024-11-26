@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { gcd, lcm, modInverse } from "./utils";
 import LabelInput from "../components/input/LabelInput";
 import { isPrime, modPow } from "../utils/math";
+import { gcd, lcm, modInverse } from "./utils";
 
 export default function RsaPage() {
   const [p, setP] = useState<number>(3);
