@@ -3,12 +3,12 @@ export interface InputProps
   isValid?: boolean;
 }
 
-export default function Input({ value, onChange, isValid = true, ...props }: InputProps) {
+export default function Input({ value, onChange, isValid = true, className, ...props }: InputProps) {
   return (
     <input
       value={value}
       onChange={onChange}
-      className={`rounded border p-2 ${isValid ? "border-gray-300" : "border-2 border-red-500"}`}
+      className={`${isValid ? "border-gray-300" : "border-2 border-red-500"} ${className}`}
       {...props}
     />
   );

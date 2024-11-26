@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LabelInput from "../components/input/LabelInput";
 import { isPrime, modPow } from "../utils/math";
+import { generateRandomNumber, generateRandomPrime } from "../utils/random";
 import Instance from "./Instance";
 
 const MAX_NUMBER = 1_000;
@@ -17,8 +18,8 @@ export default function DiffieHellman() {
   const [pValid, setPValid] = useState(true);
 
   // 1. Private Schlüssel
-  const [aPrivate, setAPrivate] = useState<number>(generateRandomNumber());
-  const [bPrivate, setBPrivate] = useState<number>(generateRandomNumber());
+  const [aPrivate, setAPrivate] = useState<number>(generateRandomNumber(MAX_NUMBER));
+  const [bPrivate, setBPrivate] = useState<number>(generateRandomNumber(MAX_NUMBER));
 
   // 2. Öffentliche Schlüssel
   const aPublic = modPow(g, aPrivate, p);
@@ -42,24 +43,25 @@ export default function DiffieHellman() {
 
   // Generierung gültiger Werte für p, g und die privaten Schlüssel
   const generateValues = () => {
-    setP(generateRandomPrime());
+    setP(generateRandomPrime(MAX_NUMBER));
     setPValid(true);
 
     // Festlegung von g auf 5 (kann angepasst werden)
-    setG(generateRandomNumber());
+    setG(generateRandomNumber(MAX_NUMBER));
 
     // Neue private Schlüssel generieren
-    setAPrivate(generateRandomNumber());
-    setBPrivate(generateRandomNumber());
+    setAPrivate(generateRandomNumber(MAX_NUMBER));
+    setBPrivate(generateRandomNumber(MAX_NUMBER));
   };
 
   return (
     <div className="p-5">
-      <h1 className="mb-5 text-center text-3xl font-bold">Diffie-Hellman-Schlüsselaustausch</h1>
+      <h1>Diffie-Hellman-Schlüsselaustausch</h1>
       <div className="mb-5 flex items-end justify-center space-x-5">
         <LabelInput
           labelProps={{ className: "max-w-64" }}
           label="Gemeinsame Primzahl (p):"
+          type="number"
           value={p}
           onChange={handlePChange}
           isValid={pValid}
@@ -67,15 +69,11 @@ export default function DiffieHellman() {
         <LabelInput
           labelProps={{ className: "max-w-64" }}
           label="Gemeinsamer Generator (g):"
+          type="number"
           value={g}
           onChange={(e) => setG(parseInt(e.target.value))}
         />
-        <button
-          onClick={generateValues}
-          className="self-end rounded bg-gray-700 px-3 py-2 text-white hover:bg-gray-800"
-        >
-          Werte generieren
-        </button>
+        <button onClick={generateValues}>Werte generieren</button>
       </div>
 
       <div className="flex justify-around">
@@ -100,16 +98,4 @@ export default function DiffieHellman() {
       </div>
     </div>
   );
-}
-
-function generateRandomNumber(): number {
-  return Math.floor(Math.random() * MAX_NUMBER);
-}
-
-function generateRandomPrime(): number {
-  let random;
-  do {
-    random = generateRandomNumber();
-  } while (!isPrime(random));
-  return random;
 }

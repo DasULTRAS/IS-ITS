@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LabelInput from "../components/input/LabelInput";
-import { isPrime, modPow } from "../utils/math";
-import { gcd, lcm, modInverse } from "./utils";
+import * as math from "../utils/math";
 
 export default function RsaPage() {
   const [p, setP] = useState<number>(3);
@@ -19,46 +18,45 @@ export default function RsaPage() {
 
   const [lambdaN, setLambdaN] = useState<number>(0);
   useEffect(() => {
-    setLambdaN(lcm(p - 1, q - 1));
+    setLambdaN(math.lcm(p - 1, q - 1));
   }, [p, q]);
 
   const [d, setD] = useState<number>(0);
   useEffect(() => {
-    setD(modInverse(e, lambdaN));
+    setD(math.modInverse(e, lambdaN));
   }, [e, lambdaN]);
 
   useEffect(() => {
+    const handleEncrypt = () => {
+      if (math.gcd(e, lambdaN) !== 1) {
+        return;
+      }
+
+      const encrypted = math.modPow(message, e, n);
+      setCipher(encrypted);
+    };
+
     handleEncrypt();
   }, [e, n, lambdaN, message]);
 
-  useEffect(() => {
-    handleDecrypt();
-  }, [cipher]);
-
-  const handleEncrypt = () => {
-    if (gcd(e, lambdaN) !== 1) {
-      return;
-    }
-
-    const encrypted = modPow(message, e, n);
-    setCipher(encrypted);
-  };
-
-  const handleDecrypt = () => {
-    const d = modInverse(e, lambdaN);
+  const handleDecrypt = useCallback(() => {
     if (d === 0) {
       return;
     }
 
     if (cipher) {
-      const decryptedMessage = modPow(cipher, d, n);
+      const decryptedMessage = math.modPow(cipher, d, n);
       setDecrypted(decryptedMessage);
     }
-  };
+  }, [cipher, d, n]);
+
+  useEffect(() => {
+    handleDecrypt();
+  }, [cipher, handleDecrypt]);
 
   return (
     <div className="mx-auto max-w-xl p-4">
-      <h1 className="mb-4 text-2xl font-bold">RSA Verschlüsselung</h1>
+      <h1>RSA Verschlüsselung</h1>
       <div className="space-y-4">
         <div className="space-y-3">
           <div className="flex space-x-2">
@@ -68,14 +66,14 @@ export default function RsaPage() {
               value={p}
               onChange={(e) => setP(parseInt(e.target.value))}
               type="number"
-              isValid={isPrime(p)}
+              isValid={math.isPrime(p)}
             />
             <LabelInput
               label="Primzahl q"
               value={q}
               onChange={(e) => setQ(parseInt(e.target.value))}
               type="number"
-              isValid={isPrime(q)}
+              isValid={math.isPrime(q)}
             />
           </div>
 
@@ -95,15 +93,19 @@ export default function RsaPage() {
 
           <div className="flex space-x-2">
             <h2 className="mr-5 self-center text-xl font-bold">4.</h2>
-            <LabelInput
-              label="Öffentlicher Exponent e"
-              value={e}
-              onChange={(e) => setE(parseInt(e.target.value))}
-              type="number"
-              isValid={gcd(e, lambdaN) === 1 && 1 < e && e < lambdaN && modInverse(e, lambdaN) !== 0}
-            />
-            {modInverse(e, lambdaN) === 0 && <text className="text-red-500">Kein modulares Inverses gefunden.</text>}
-            {gcd(e, lambdaN) !== 1 && <text className="text-red-500">e und λ(n) sind nicht teilerfremd.</text>}
+            <div className="block w-full">
+              <LabelInput
+                label="Öffentlicher Exponent e"
+                value={e}
+                onChange={(e) => setE(parseInt(e.target.value))}
+                type="number"
+                isValid={math.gcd(e, lambdaN) === 1 && 1 < e && e < lambdaN && math.modInverse(e, lambdaN) !== 0}
+              />
+              {math.modInverse(e, lambdaN) === 0 && (
+                <text className="text-red-500">Kein modulares Inverses gefunden.</text>
+              )}
+              {math.gcd(e, lambdaN) !== 1 && <text className="text-red-500">e und λ(n) sind nicht teilerfremd.</text>}
+            </div>{" "}
           </div>
 
           <div className="flex space-x-2">

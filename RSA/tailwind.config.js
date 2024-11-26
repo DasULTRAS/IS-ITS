@@ -4,5 +4,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
 };

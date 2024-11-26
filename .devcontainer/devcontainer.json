@@ -16,7 +16,8 @@
         "bradlc.vscode-tailwindcss",
         "esbenp.prettier-vscode",
         "github.vscode-github-actions",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "christian-kohler.npm-intellisense"
       ],
       "settings": {
         // General settings

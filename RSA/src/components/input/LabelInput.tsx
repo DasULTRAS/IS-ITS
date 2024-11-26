@@ -3,7 +3,6 @@ import Input, { InputProps } from ".";
 export interface LabelInputProps extends InputProps {
   label: string;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
-  divProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export default function LabelInput({ label, isValid, labelProps, ...props }: LabelInputProps) {

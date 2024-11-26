@@ -38,3 +38,58 @@ export function isPrime(n: number): boolean {
   }
   return true;
 }
+
+/**
+ * Calculates the greatest common divisor (gcd) of two numbers using the Euclidean algorithm.
+ * @param a - The first number.
+ * @param b - The second number.
+ * @returns The greatest common divisor of the two numbers.
+ */
+export function gcd(a: number, b: number): number {
+  while (b !== 0) {
+    const temp = b;
+    b = a % b;
+    a = temp;
+  }
+  return a;
+}
+
+/**
+ * Calculates the least common multiple (lcm) of two numbers using the greatest common divisor (gcd).
+ * @param a - The first number.
+ * @param b - The second number.
+ * @returns The least common multiple of the two numbers.
+ */
+export function lcm(a: number, b: number): number {
+  return Math.abs(a * b) / gcd(a, b);
+}
+
+/**
+ * Calculates the modular multiplicative inverse of a number e modulo phi using the Extended Euclidean Algorithm.
+ * @param e - The number to find the modular inverse of.
+ * @param phi - The modulus.
+ * @returns The modular multiplicative inverse of e modulo phi.
+ */
+export function modInverse(e: number, phi: number): number {
+  const m0 = phi;
+  let y = 0,
+    x = 1;
+
+  if (phi === 1) return 0;
+
+  while (e > 1) {
+    const q = Math.floor(e / phi);
+    let t = phi;
+
+    phi = e % phi;
+    e = t;
+    t = y;
+
+    y = x - q * y;
+    x = t;
+  }
+
+  if (x < 0) x += m0;
+
+  return x;
+}
