@@ -1,11 +1,61 @@
+import { useEffect, useState } from "react";
 import DiffieHellman from "./diffieHellman";
 import RSA from "./rsa";
 
 export default function App() {
+  const [isDesktop, setIsDesktop] = useState(window.matchMedia("(min-width: 640px)").matches);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 640px)");
+
+    // Funktion zur Aktualisierung des States
+    const handleMediaQueryChange = (event) => {
+      setIsDesktop(event.matches);
+    };
+
+    // Event-Listener hinzufügen
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Cleanup: Event-Listener entfernen
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen">
-      <DiffieHellman />
-      <RSA />
-    </div>
+    <>
+      <header className="sticky top-0 flex h-16 bg-neutral-200 px-5 py-2 shadow-lg dark:bg-neutral-800">
+        <div className="flex w-16 items-center sm:w-32">
+          <a className="place-self-center text-xl font-bold" href="/">
+            {isDesktop ? "IT-Sicherheit" : "ITS"}
+          </a>
+        </div>
+
+        <div className="flex flex-grow items-center justify-center">
+          <nav>
+            <ul className="flex space-x-4">
+              <li>
+                <a href="#diffie-hellman" className="hover:underline">
+                  Diffie-Hellman
+                </a>
+              </li>
+              <li>
+                <a href="#rsa" className="hover:underline">
+                  RSA
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div className="w-0 sm:w-32"></div>
+      </header>
+
+      <div className="m-5 flex min-h-screen flex-col items-center space-y-10">
+        <DiffieHellman />
+        <hr />
+        <RSA />
+      </div>
+    </>
   );
 }

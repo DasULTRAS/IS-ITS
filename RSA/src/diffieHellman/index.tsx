@@ -55,11 +55,11 @@ export default function DiffieHellman() {
   };
 
   return (
-    <div className="p-5">
-      <h1>Diffie-Hellman-Schlüsselaustausch</h1>
-      <div className="mb-5 flex items-end justify-center space-x-5">
+    <div className="flex max-w-2xl flex-col space-y-5">
+      <h1 id="diffie-hellman">Diffie-Hellman-Schlüsselaustausch</h1>
+      <div className="flex items-end justify-center space-x-5">
         <LabelInput
-          labelProps={{ className: "max-w-64" }}
+          labelProps={{ className: "" }}
           label="Gemeinsame Primzahl (p):"
           type="number"
           value={p}
@@ -67,16 +67,19 @@ export default function DiffieHellman() {
           isValid={pValid}
         />
         <LabelInput
-          labelProps={{ className: "max-w-64" }}
+          labelProps={{ className: "" }}
           label="Gemeinsamer Generator (g):"
           type="number"
           value={g}
           onChange={(e) => setG(parseInt(e.target.value))}
         />
-        <button onClick={generateValues}>Werte generieren</button>
       </div>
 
-      <div className="flex justify-around">
+      <button onClick={generateValues} className="self-center">
+        Werte generieren
+      </button>
+
+      <div className="flex justify-center space-x-5">
         <Instance
           name="Alice"
           privateKey={aPrivate}

@@ -55,8 +55,8 @@ export default function RsaPage() {
   }, [cipher, handleDecrypt]);
 
   return (
-    <div className="mx-auto max-w-xl p-4">
-      <h1>RSA Verschlüsselung</h1>
+    <div className="mx-auto">
+      <h1 id="rsa">RSA Verschlüsselung</h1>
       <div className="space-y-4">
         <div className="space-y-3">
           <div className="flex space-x-2">

@@ -16,7 +16,7 @@ interface InstanceProps {
  */
 export default function Instance({ name, privateKey, publicKey, sharedSecret, otherPublicKey, p, g }: InstanceProps) {
   return (
-    <div className="w-1/3 rounded-2xl border p-5 shadow-md">
+    <div className="w-full rounded-2xl border p-5 shadow-md">
       <h2 className="mb-3 text-2xl font-bold">{name}</h2>
       <ol className="list-inside list-decimal space-y-2">
         <li>
