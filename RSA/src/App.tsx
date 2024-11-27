@@ -53,7 +53,7 @@ export default function App() {
 
       <div className="m-5 flex min-h-screen flex-col items-center space-y-10">
         <DiffieHellman />
-        <hr />
+        <hr className="w-3/5" />
         <RSA />
       </div>
     </>

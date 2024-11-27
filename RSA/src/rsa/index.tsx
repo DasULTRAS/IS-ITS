@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import LabelInput from "../components/input/LabelInput";
+import Katex from "../components/katex";
 import * as math from "../utils/math";
 
 export default function RsaPage() {
@@ -55,8 +56,9 @@ export default function RsaPage() {
   }, [cipher, handleDecrypt]);
 
   return (
-    <div className="mx-auto">
+    <div className="flex max-w-2xl flex-col space-y-5">
       <h1 id="rsa">RSA Verschlüsselung</h1>
+
       <div className="space-y-4">
         <div className="space-y-3">
           <div className="flex space-x-2">
@@ -79,16 +81,15 @@ export default function RsaPage() {
 
           <div className="flex space-x-2">
             <h2 className="mr-5 self-center text-xl font-bold">2.</h2>
-            <text>
-              n = |a * q = {p} * {q} = {n}
-            </text>
+            <Katex texString={`n=p \\cdot q = ${p} \\cdot ${q} = ${n}`} />
           </div>
 
           <div className="flex space-x-2">
             <h2 className="mr-5 self-center text-xl font-bold">3.</h2>
-            <text>
-              λ(n) = lcm(λ({p}), λ({q})) = lcm({p}-1, {q}-1) = {lambdaN}
-            </text>
+            <div>
+              <Katex texString={`\\lambda (n) = \\text{lcm}(\\lambda (p), \\lambda (q)) = \\text{lcm}(p-1, q-1)`} />
+              <Katex texString={`= \\text{lcm}(${p}-1, ${q}-1) = ${lambdaN}`} />
+            </div>
           </div>
 
           <div className="flex space-x-2">
@@ -105,41 +106,36 @@ export default function RsaPage() {
                 <text className="text-red-500">Kein modulares Inverses gefunden.</text>
               )}
               {math.gcd(e, lambdaN) !== 1 && <text className="text-red-500">e und λ(n) sind nicht teilerfremd.</text>}
-            </div>{" "}
+            </div>
           </div>
 
           <div className="flex space-x-2">
             <h2 className="mr-5 self-center text-xl font-bold">5.</h2>
-            <text>
-              d = e<sup>-1</sup> mod λ(n) = {e}
-              <sup>-1</sup> mod {lambdaN} = {d}
-            </text>
+            <div>
+              <Katex texString={`d = e^{-1} \\mod{\\lambda (n)}`} />
+              <Katex texString={`= ${e}^{-1} \\mod{${lambdaN}} = ${d}`} />
+            </div>
           </div>
-
-          <LabelInput
-            label="Nachricht (als Zahl)"
-            type="number"
-            value={message}
-            onChange={(e) => setMessage(parseInt(e.target.value))}
-          />
         </div>
+
+        <LabelInput
+          label="Nachricht (als Zahl)"
+          type="number"
+          value={message}
+          onChange={(e) => setMessage(parseInt(e.target.value))}
+        />
 
         {cipher && (
           <div>
             <h2 className="text-xl font-bold">Verschlüsselte Nachricht:</h2>
-            <text>
-              c = m<sup>e</sup> (mod n) = {message} <sup>{e}</sup> (mod {n}) = {cipher}
-            </text>
+            <Katex texString={`c = m^e \\mod{n} = ${message}^{${e}} \\mod{${n}} = ${cipher}`} />
           </div>
         )}
 
         {decrypted && (
           <div>
             <h2 className="text-xl font-bold">Entschlüsselte Nachricht:</h2>
-            <text>
-              m = c<sup>d</sup> (mod n) = {cipher}
-              <sup>{d}</sup> (mod {n}) = {decrypted}
-            </text>
+            <Katex texString={`m = c^d \\mod{n} = ${cipher}^{${d}} \\mod{${n}} = ${decrypted}`} />
           </div>
         )}
       </div>

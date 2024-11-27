@@ -8,7 +8,7 @@ export default function Input({ value, onChange, isValid = true, className, ...p
     <input
       value={value}
       onChange={onChange}
-      className={`${isValid ? "border-gray-300" : "border-2 border-red-500"} ${className}`}
+      className={`${isValid === false && "border-red-500"} ${className}`}
       {...props}
     />
   );

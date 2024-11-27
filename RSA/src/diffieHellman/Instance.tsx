@@ -1,3 +1,6 @@
+import React from "react";
+import Katex from "../components/katex";
+
 interface InstanceProps {
   name: string;
   privateKey: number;
@@ -14,34 +17,49 @@ interface InstanceProps {
  * @param {InstanceProps} props - Die Eigenschaften der Instanz.
  * @returns {JSX.Element} Die gerenderte Instanzkomponente.
  */
-export default function Instance({ name, privateKey, publicKey, sharedSecret, otherPublicKey, p, g }: InstanceProps) {
+export default function Instance({
+  name,
+  privateKey,
+  publicKey,
+  sharedSecret,
+  otherPublicKey,
+  p,
+  g,
+}: InstanceProps): React.JSX.Element {
   return (
-    <div className="w-full rounded-2xl border p-5 shadow-md">
+    <div className="w-full rounded-2xl border border-neutral-200 p-5 shadow-md dark:border-neutral-800">
       <h2 className="mb-3 text-2xl font-bold">{name}</h2>
       <ol className="list-inside list-decimal space-y-2">
         <li>
-          <span className="font-semibold">Privaten Schlüssel wählen:</span>
+          <span className="font-semibold">Privater Schlüssel:</span>
           <br />
-          <strong>a = {privateKey}</strong>.
+          <Katex texString={`a = ${privateKey}`} />
         </li>
         <li>
-          <span className="font-semibold">Öffentlichen Schlüssel berechnen:</span>
-          <br />A = g<sup>a</sup> mod p = {g}
-          <sup>{privateKey}</sup> mod {p} = <strong>{publicKey}</strong>
+          <span className="font-semibold">Öffentlicher Schlüssel:</span>
+          <br />
+          <Katex texString={`A = g^{a} \\mod p `} />
+          <Katex texString={`= ${g}^{${privateKey}} \\mod ${p}`} />
+          <Katex texString={`= ${publicKey}`} />
         </li>
         <li>
-          <span className="font-semibold">Öffentlichen Schlüssel senden:</span>
-          <br />A = {publicKey}
+          <span className="font-semibold">
+            Sende <strong>A</strong>:
+          </span>
+          <br />
+          <Katex texString={`A = ${publicKey}`} />
         </li>
         <li>
           <span className="font-semibold">Öffentlichen Schlüssel empfangen:</span>
-          <br />B = {otherPublicKey}
+          <br />
+          <Katex texString={`B = ${otherPublicKey}`} />
         </li>
         <li>
           <span className="font-semibold">Gemeinsamen Schlüssel berechnen:</span>
-          <br />s = B<sup>a</sup> mod p
-          <br />= {otherPublicKey}
-          <sup>{privateKey}</sup> mod {p} = <strong>{sharedSecret}</strong>
+          <br />
+          <Katex texString={`s = B^{a} \\mod{p}`} />
+          <Katex texString={`= ${otherPublicKey}^{${privateKey}} \\mod ${p}`} />
+          <Katex texString={`= ${sharedSecret}`} />
         </li>
       </ol>
     </div>

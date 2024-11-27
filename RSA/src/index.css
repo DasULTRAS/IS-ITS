@@ -15,7 +15,7 @@ h1 {
 }
 
 input {
-  @apply w-full rounded-md border border-neutral-300 bg-neutral-100 p-3 text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2;
+  @apply w-full rounded-md border-2 border-neutral-200 bg-neutral-100 p-3 text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2;
 
   /* Übergangseffekte für eine flüssige Animation */
   @apply transition duration-200 ease-in-out;
@@ -31,6 +31,10 @@ button {
   @apply cursor-pointer transition-all ease-in-out before:absolute before:bottom-0 before:left-[50%] before:h-[1px] before:w-0 before:origin-center before:bg-neutral-400 before:transition-[width] before:duration-500 before:ease-in-out after:absolute after:bottom-0 after:right-[50%] after:h-[1px] after:w-0 after:origin-center after:bg-neutral-400 after:transition-[width] after:duration-500 after:ease-in-out hover:before:w-[50%] hover:after:w-[50%];
 
   @apply text-black dark:text-white;
+}
+
+.katex {
+  @apply text-lg font-bold;
 }
 
 /* scrollbar */
