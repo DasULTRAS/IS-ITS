@@ -9,7 +9,7 @@ export default function App() {
     const mediaQuery = window.matchMedia("(min-width: 640px)");
 
     // Funktion zur Aktualisierung des States
-    const handleMediaQueryChange = (event) => {
+    const handleMediaQueryChange = (event: MediaQueryListEvent) => {
       setIsDesktop(event.matches);
     };
 

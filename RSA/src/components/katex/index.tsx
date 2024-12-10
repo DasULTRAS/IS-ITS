@@ -15,7 +15,7 @@ export interface KatexOptions {
   errorColor?: string;
   macros?: object;
   minRuleThickness?: number;
-  colorIsTextColor?: number;
+  colorIsTextColor?: boolean;
   maxSize?: number;
   maxExpand?: number;
   strict?: boolean;
