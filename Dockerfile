@@ -1,4 +1,4 @@
-FROM node:22.11 AS builder
+FROM node:22.13 AS builder
 # SET work dir in container
 WORKDIR /app
 # copy packages files
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # production environment
-FROM nginx:1.26 AS production
+FROM nginx:1.27 AS production
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
