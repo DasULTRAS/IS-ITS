@@ -23,7 +23,7 @@ updates:
     reviewers:
       - "dasultras"
 
-   - package-ecosystem: "docker"
+  - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -41,7 +41,7 @@ updates:
     reviewers:
       - "dasultras"
 
-   - package-ecosystem: "github-actions"
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -59,7 +59,7 @@ updates:
     reviewers:
       - "dasultras"
 
-   - package-ecosystem: "devcontainers"
+  - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
       interval: "weekly"
