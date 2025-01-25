@@ -11,8 +11,14 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "chore"
+    ignore:
+      # For all deps
+      - dependency-name: "*"
+        # ignore all major updates
+        update-types: ["version-update:semver-major"]
     labels:
       - "dependencies"
+      - "automerge"
     open-pull-requests-limit: 5
     groups:
       dependencies:
@@ -29,8 +35,14 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "chore"
+    ignore:
+      # For all deps
+      - dependency-name: "*"
+        # ignore all major updates
+        update-types: ["version-update:semver-major"]
     labels:
       - "dependencies"
+      - "automerge"
     open-pull-requests-limit: 5
     groups:
       dependencies:
