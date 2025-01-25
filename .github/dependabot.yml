@@ -15,9 +15,18 @@ updates:
       - "dependencies"
     open-pull-requests-limit: 5
     groups:
-      dependencies:
+      react:
         patterns:
-          - "*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@vitejs/plugin-react-swc"
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/js"
+          - "eslint-plugin-*"
     assignees:
       - "dasultras"
     reviewers:
@@ -32,10 +41,6 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
-    groups:
-      dependencies:
-        patterns:
-          - "*"
     assignees:
       - "dasultras"
     reviewers:
@@ -50,10 +55,6 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
-    groups:
-      dependencies:
-        patterns:
-          - "*"
     assignees:
       - "dasultras"
     reviewers:
@@ -68,10 +69,6 @@ updates:
     labels:
       - "dependencies"
     open-pull-requests-limit: 5
-    groups:
-      dependencies:
-        patterns:
-          - "*"
     assignees:
       - "dasultras"
     reviewers:
