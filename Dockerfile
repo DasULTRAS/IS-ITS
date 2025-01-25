@@ -1,4 +1,4 @@
-FROM node:22.11 AS builder
+FROM node:23.6 AS builder
 # SET work dir in container
 WORKDIR /app
 # copy packages files
