@@ -29,30 +29,6 @@ updates:
     reviewers:
       - "dasultras"
 
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "chore"
-    ignore:
-      # For all deps
-      - dependency-name: "*"
-        # ignore all major updates
-        update-types: ["version-update:semver-major"]
-    labels:
-      - "dependencies"
-      - "automerge"
-    open-pull-requests-limit: 5
-    groups:
-      dependencies:
-        patterns:
-          - "*"
-    assignees:
-      - "dasultras"
-    reviewers:
-      - "dasultras"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

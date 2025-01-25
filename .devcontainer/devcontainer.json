@@ -3,9 +3,6 @@
 {
   "name": "IS-ITS - Dev Container",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
-
-  "postCreateCommand": "git config --global --add safe.directory '*' && git config commit.gpgsign false",
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -33,8 +30,12 @@
       }
     }
   },
-
-  "forwardPorts": [3000],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {}
+  },
+  "forwardPorts": [
+    3000
+  ],
   "portsAttributes": {
     "3000": {
       "label": "React App",
