@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DiffieHellman from "./diffieHellman";
 import RSA from "./rsa";
+import BabyStepGiantStep from "./babyStepGiantStep";
 
 export default function App() {
   const [isDesktop, setIsDesktop] = useState(window.matchMedia("(min-width: 640px)").matches);
@@ -40,6 +41,11 @@ export default function App() {
                 </a>
               </li>
               <li>
+                <a href="#babystep-giantstep" className="hover:underline">
+                  Baby-Step Giant-Step
+                </a>
+              </li>
+              <li>
                 <a href="#rsa" className="hover:underline">
                   RSA
                 </a>
@@ -53,6 +59,10 @@ export default function App() {
 
       <div className="m-5 flex min-h-screen flex-col items-center space-y-10">
         <DiffieHellman />
+
+        <hr className="w-3/5" />
+        <BabyStepGiantStep />
+
         <hr className="w-3/5" />
         <RSA />
       </div>
