@@ -24,8 +24,8 @@ import { modPow } from "../utils/math";
  * @see https://en.wikipedia.org/wiki/Baby-step_giant-step for more information on the algorithm.
  */
 export default function BabyStepGiantStep() {
-  const [g, setG] = useState<number>(2);
-  const [h, setH] = useState<number>(22);
+  const [alpha, setAlpha] = useState<number>(2);
+  const [beta, setBeta] = useState<number>(22);
   const [p, setP] = useState<number>(29);
 
   const [m, setM] = useState<number>(0);
@@ -36,7 +36,7 @@ export default function BabyStepGiantStep() {
 
   useEffect(() => {
     calculateDiscreteLog();
-  }, [g, h, p]);
+  }, [alpha, beta, p]);
 
   const calculateDiscreteLog = useCallback(() => {
     const m = Math.ceil(Math.sqrt(p));
@@ -48,19 +48,19 @@ export default function BabyStepGiantStep() {
 
     // Schritt 1: Berechnung der Baby-Steps
     for (let j = 0; j < m; j++) {
-      const value = modPow(g, j, p);
+      const value = modPow(alpha, j, p);
       babySteps[value] = j;
-      stepData.push([`Baby-Step (${j})`, <Katex texString={`g^${j} = ${value} \\mod{${p}}`} />, value]);
+      stepData.push([`Baby-Step (${j})`, <Katex texString={`g^${j} \\mod{${p}}`} />, value]);
     }
 
     // Schritt 2: Berechnung des Inversen Schritts
-    const inverseFactor = modPow(g, p - 1 - m, p);
+    const inverseFactor = modPow(alpha, p - 1 - m, p);
     setInverseFactor(inverseFactor);
-    let gamma = h;
+    let gamma = beta;
 
     stepData.push([
       "Inverse Berechnung",
-      <Katex texString={`g^{-m} \\equiv ${g}^{-${m}} \\mod{${p}}`} />,
+      <Katex texString={`g^{-m} \\equiv ${alpha}^{-${m}} \\mod{${p}}`} />,
       inverseFactor,
     ]);
 
@@ -83,7 +83,7 @@ export default function BabyStepGiantStep() {
       gamma = (gamma * inverseFactor) % p;
       stepData.push([
         `Giant-Step (${i})`,
-        <Katex texString={`h \\cdot \\gamma = ${h} \\cdot ${oldGamma} = ${gamma} \\mod{${p}}`} />,
+        <Katex texString={`h \\cdot \\gamma = ${beta} \\cdot ${oldGamma} \\mod{${p}}`} />,
         gamma,
       ]);
     }
@@ -91,7 +91,7 @@ export default function BabyStepGiantStep() {
     setResult(null);
     stepData.push(["", <span>Keine Lösung gefunden</span>, 0]);
     setSteps(stepData);
-  }, [g, h, p]);
+  }, [alpha, beta, p]);
 
   return (
     <div className="flex max-w-2xl flex-col space-y-5">
@@ -100,13 +100,43 @@ export default function BabyStepGiantStep() {
         Der <b>Baby-Step Giant-Step</b> Algorithmus berechnet den <b>diskreten Logarithmus</b> effizient mit einer
         Laufzeit von <Katex texString="O(\sqrt{p})" />.
       </p>
+
       <div className="space-y-4">
-        <LabelInput label="Basis (g)" type="number" value={g} onChange={(e) => setG(parseInt(e.target.value))} />
-        <LabelInput label="Zielwert (h)" type="number" value={h} onChange={(e) => setH(parseInt(e.target.value))} />
-        <LabelInput label="Modulus (p)" type="number" value={p} onChange={(e) => setP(parseInt(e.target.value))} />
+        <LabelInput
+          label={
+            <>
+              Basis (<Katex texString="\alpha" />)
+            </>
+          }
+          type="number"
+          value={alpha}
+          onChange={(e) => setAlpha(parseInt(e.target.value))}
+        />
+        <LabelInput
+          label={
+            <>
+              Zielwert (<Katex texString="\beta" />)
+            </>
+          }
+          type="number"
+          value={beta}
+          onChange={(e) => setBeta(parseInt(e.target.value))}
+        />
+        <LabelInput
+          label={
+            <>
+              Modulus (<Katex texString="p" />)
+            </>
+          }
+          type="number"
+          value={p}
+          onChange={(e) => setP(parseInt(e.target.value))}
+        />
       </div>
+
       <p className="font-bold">
-        Zu berechnende Gleichung: <Katex texString={`${g}^x \\equiv ${h} \\mod{${p}}`} />
+        Zu berechnende Gleichung:{" "}
+        <Katex texString={`\\alpha^x \\equiv \\beta \\mod{p} \\Rightarrow ${alpha}^x \\equiv ${beta} \\mod{${p}}`} />
       </p>
 
       <div>
@@ -115,23 +145,21 @@ export default function BabyStepGiantStep() {
           <li>
             <div className="flex space-x-2">
               <p>
-                Berechne{" "}
-                <Katex
-                  texString={`m = \\text{Ceiling}(\\sqrt{n}) = \\lceil \\sqrt{${p}} \\rceil = ${m}`}
-                  data-tooltip-id={`tooltip-${1}`}
-                />
-                <Tooltip id={`tooltip-${1}`} place="top">
-                  Ceiling Funktion rundet auf die nächste ganze Zahl auf.
+                Berechne <Katex texString={`m = \\lceil \\sqrt{p} \\rceil = ${m}`} data-tooltip-id={`tooltip-1`} />
+                <Tooltip id={`tooltip-1`} place="top">
+                  Die Ceiling-Funktion rundet die Quadratwurzel von <Katex texString="p" /> auf die nächste größere
+                  ganze Zahl, um die Anzahl der Baby- und Giant-Steps zu bestimmen.
                 </Tooltip>
               </p>
             </div>
           </li>
 
           <li>
-            <b>Baby-Steps</b>: Für alle j wenn <Katex texString="0 \leq j \leq m" />: <br />
+            <b>Baby-Steps</b>: Für alle <Katex texString="j" />, wenn <Katex texString="0 \leq j < m" />: <br />
             <ol className="list-decimal pl-5">
               <li>
-                Berechne <Katex texString={`g^j \\mod p`} /> und speichere als Paar <Katex texString="(j, g^j)" />
+                Berechne <Katex texString="\alpha^j \mod p" /> und speichere als Paar{" "}
+                <Katex texString="(j, \alpha^j)" /> in einer Tabelle.
               </li>
             </ol>
           </li>
@@ -139,36 +167,40 @@ export default function BabyStepGiantStep() {
           <li>
             Berechne den <b data-tooltip-id="tooltip-2">inversen Schritt:</b>
             <Tooltip id="tooltip-2" className="max-w-xs" place="top">
-              Der inverse Schritt wird im Giant-Step verwendet. Anstatt jedes Mal (<Katex texString="g^{-im} \mod p" />)
-              von Grund auf zu berechnen, wird der Wert einmal berechnet und dann wiederholt verwendet.
+              Der inverse Schritt wird verwendet, um die Berechnung der Giant-Steps effizienter zu gestalten. Statt
+              jedes Mal <Katex texString="\alpha^{-m} \mod p" /> neu zu berechnen, wird dieser Wert vorab bestimmt und
+              wiederverwendet.
             </Tooltip>{" "}
             <Katex
-              texString={`g^{-m} \\equiv ${g}^{-${Math.ceil(Math.sqrt(p))}} \\mod p \\equiv ${inverseFactor} \\mod ${p}`}
+              texString={`\\alpha^{-m}  \\mod p \\Rightarrow ${alpha}^{-${m}} \\equiv ${inverseFactor} \\mod ${p}`}
             />
-            .
           </li>
 
           <li>
-            <Katex texString={`\\gamma = h = ${h}`} data-tooltip-id="tooltip-3" />
+            <Katex texString={`\\gamma_0 = \\beta = ${beta}`} data-tooltip-id="tooltip-3" />
             <Tooltip id="tooltip-3" place="top" className="max-w-xs">
-              Hier wird <Katex texString="\gamma" /> mit dem gegebenen Wert von <Katex texString="h" /> initialisiert,
-              welcher das Ziel der Berechnung darstellt.
+              Hier wird <Katex texString="\gamma_0" /> als <Katex texString="\beta" /> initialisiert, was das
+              Ausgangsproblem der Berechnung repräsentiert.
             </Tooltip>
           </li>
 
           <li>
-            <b>Giant-Steps</b>: Für alle <Katex texString="i" /> wenn <Katex texString="0 \leq i < m" />:
+            <b>Giant-Steps</b>: Für alle <Katex texString="i" />, wenn <Katex texString="0 \leq i < m" />:
             <ol className="list-decimal pl-5">
               <li>
-                Berechne <Katex texString={`\\gamma = h \\cdot g^{-im} = h \\cdot \\gamma \\mod p`} />. <br />
-                Überprüfe, ob <Katex texString={`\\gamma`} /> in den Baby-Steps gefunden wurde.
+                Überprüfe, ob <Katex texString={`\\gamma_{i}`} /> in der Baby-Step-Tabelle ist:
               </li>
-              <ol className="pl-5">
+              <ol className="list-disc pl-5">
                 <li>
-                  Wenn, Ja: <Katex texString={`x \\equiv im + j \\mod p`} /> ist die Lösung.
+                  Falls <b>ja</b>:<br />
+                  <Katex texString={`x \\equiv im + \\text{babyStep}[i] \\mod p`} data-tooltip-id="tooltip-4" />
+                  <Tooltip id="tooltip-4" place="top" className="max-w-xs">
+                    Die Lösung ergibt sich durch Kombination des Giant-Step-Index mit dem gespeicherten Baby-Step-Wert.
+                  </Tooltip>
                 </li>
                 <li>
-                  Wenn, Nein: Berechne <Katex texString={`\\gamma \\equiv h \\cdot g^{-im} \\mod p`} />.
+                  Falls, <b>nein</b>: <br />
+                  <Katex texString="\gamma_{i+1} \equiv \gamma_i \cdot \alpha^{-m} \mod p" />
                 </li>
               </ol>
             </ol>

@@ -1,7 +1,7 @@
 import Input, { InputProps } from ".";
 
 export interface LabelInputProps extends InputProps {
-  label: string;
+  label: string | React.ReactNode;
   labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
 }
 
