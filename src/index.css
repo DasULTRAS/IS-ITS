@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 html {
-  @apply font-sans antialiased;
+  @apply min-w-sm font-sans antialiased;
 }
 
 body {

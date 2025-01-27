@@ -50,7 +50,7 @@ export default function BabyStepGiantStep() {
     for (let j = 0; j < m; j++) {
       const value = modPow(alpha, j, p);
       babySteps[value] = j;
-      stepData.push([`Baby-Step (${j})`, <Katex texString={`g^${j} \\mod{${p}}`} />, value]);
+      stepData.push([`Baby-Step (${j})`, <Katex texString={`${alpha}^${j} \\mod{${p}}`} />, value]);
     }
 
     // Schritt 2: Berechnung des Inversen Schritts
@@ -58,11 +58,7 @@ export default function BabyStepGiantStep() {
     setInverseFactor(inverseFactor);
     let gamma = beta;
 
-    stepData.push([
-      "Inverse Berechnung",
-      <Katex texString={`g^{-m} \\equiv ${alpha}^{-${m}} \\mod{${p}}`} />,
-      inverseFactor,
-    ]);
+    stepData.push(["Inverse Berechnung", <Katex texString={`${alpha}^{-${m}} \\mod{${p}}`} />, inverseFactor]);
 
     // Schritt 3: Berechnung der Giant-Steps
     for (let i = 0; i < m; i++) {
@@ -72,7 +68,8 @@ export default function BabyStepGiantStep() {
         stepData.push([
           `Giant-Step (${i})`,
           <span>
-            Lösung gefunden bei i={i}, j={babySteps[gamma]}
+            Lösung gefunden: <br />
+            i={i}, j={babySteps[gamma]}
           </span>,
           solution,
         ]);
@@ -81,15 +78,11 @@ export default function BabyStepGiantStep() {
       }
       const oldGamma = gamma;
       gamma = (gamma * inverseFactor) % p;
-      stepData.push([
-        `Giant-Step (${i})`,
-        <Katex texString={`h \\cdot \\gamma = ${beta} \\cdot ${oldGamma} \\mod{${p}}`} />,
-        gamma,
-      ]);
+      stepData.push([`Giant-Step (${i})`, <Katex texString={`${beta} \\cdot ${oldGamma} \\mod{${p}}`} />, gamma]);
     }
 
     setResult(null);
-    stepData.push(["", <span>Keine Lösung gefunden</span>, 0]);
+    stepData.push(["", <span>Keine Lösung</span>, 0]);
     setSteps(stepData);
   }, [alpha, beta, p]);
 
@@ -193,9 +186,21 @@ export default function BabyStepGiantStep() {
               <ol className="list-disc pl-5">
                 <li>
                   Falls <b>ja</b>:<br />
-                  <Katex texString={`x \\equiv im + \\text{babyStep}[i] \\mod p`} data-tooltip-id="tooltip-4" />
+                  <Katex texString={`x \\equiv im + j \\mod p`} data-tooltip-id="tooltip-4" />
                   <Tooltip id="tooltip-4" place="top" className="max-w-xs">
-                    Die Lösung ergibt sich durch Kombination des Giant-Step-Index mit dem gespeicherten Baby-Step-Wert.
+                    Die Lösung ergibt sich durch Kombination des Baby-Steps <Katex texString="j" /> und des Giant-Steps{" "}
+                    <Katex texString="i" />.
+                    <br />
+                    Der Algorithmus nutzt die Zerlegung:
+                    <br />
+                    <Katex texString="a^x \equiv b \mod p" />
+                    <br />
+                    Der Baby-Step berechnet <Katex texString="a^j" />, während der Giant-Step{" "}
+                    <Katex texString="a^{-m}" /> multipliziert.
+                    <br />
+                    Bei Übereinstimmung ergibt sich:
+                    <br />
+                    <Katex texString="x = im + j \mod p" />
                   </Tooltip>
                 </li>
                 <li>
@@ -226,7 +231,7 @@ export default function BabyStepGiantStep() {
               <thead>
                 <tr className="bg-gray-200 text-left text-sm tracking-wide text-gray-600 uppercase dark:bg-gray-800 dark:text-gray-300">
                   {steps[0].map((step, i) => (
-                    <th key={i} className="border border-gray-300 px-4 py-2 text-center">
+                    <th key={i} className="border border-gray-300 px-1 py-2 text-center">
                       {step}
                     </th>
                   ))}
