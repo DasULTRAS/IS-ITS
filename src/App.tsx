@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <>
-      <header className="sticky top-0 flex h-16 bg-neutral-200 px-5 py-2 shadow-lg dark:bg-neutral-800">
+      <header className="sticky top-0 flex h-16 bg-neutral-200 px-5 py-2 shadow-lg dark:bg-neutral-800 z-10">
         <div className="flex w-16 items-center sm:w-32">
           <a className="place-self-center text-xl font-bold" href="/">
             {isDesktop ? "IT-Sicherheit" : "ITS"}
