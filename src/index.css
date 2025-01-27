@@ -12,6 +12,10 @@ h1 {
   @apply text-center text-3xl font-bold;
 }
 
+h2 {
+  @apply text-xl font-bold;
+}
+
 input {
   @apply w-full rounded-md border-2 border-neutral-400 bg-neutral-100 p-2 text-neutral-900 placeholder-neutral-500 shadow-sm outline-none focus:border-indigo-500;
 
@@ -19,7 +23,7 @@ input {
   @apply transition duration-200 ease-in-out;
 
   /* Dark Mode Anpassungen */
-  @apply dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-400 dark:border-neutral-600;
+  @apply dark:border-neutral-600 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-400;
 }
 
 button {
