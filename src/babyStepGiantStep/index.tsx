@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { Chart } from "react-google-charts";
 import { Tooltip } from "react-tooltip";
 import LabelInput from "../components/input/LabelInput";
 import Katex from "../components/katex";
@@ -33,7 +32,7 @@ export default function BabyStepGiantStep() {
   const [inverseFactor, setInverseFactor] = useState<number>(0);
 
   const [result, setResult] = useState<number | null>(null);
-  const [steps, setSteps] = useState<Array<[string, number]>>([]);
+  const [steps, setSteps] = useState<Array<[string, React.ReactElement, number]>>([]);
 
   useEffect(() => {
     calculateDiscreteLog();
@@ -45,13 +44,13 @@ export default function BabyStepGiantStep() {
 
     const babySteps: Record<number, number> = {};
     // @ts-expect-error: Wrong type for stepData (but it's necessary for the Chart component)
-    const stepData: Array<[string, number]> = [["Schritt", "Werte"]];
+    const stepData: Array<[string, React.ReactElement, number]> = [["Schritt", "Berechnung", "Werte"]];
 
     // Schritt 1: Berechnung der Baby-Steps
     for (let j = 0; j < m; j++) {
       const value = modPow(g, j, p);
       babySteps[value] = j;
-      stepData.push([`Baby-Step: g^${j} mod ${p} = ${value}`, value]);
+      stepData.push([`Baby-Step (${j})`, <Katex texString={`g^${j} = ${value} \\mod{${p}}`} />, value]);
     }
 
     // Schritt 2: Berechnung des Inversen Schritts
@@ -59,23 +58,38 @@ export default function BabyStepGiantStep() {
     setInverseFactor(inverseFactor);
     let gamma = h;
 
-    stepData.push([`Inverse Berechnung: g^{-m} ≡ g^{-${m}} \\mod ${p}`, inverseFactor]);
+    stepData.push([
+      "Inverse Berechnung",
+      <Katex texString={`g^{-m} \\equiv ${g}^{-${m}} \\mod{${p}}`} />,
+      inverseFactor,
+    ]);
 
     // Schritt 3: Berechnung der Giant-Steps
     for (let i = 0; i < m; i++) {
       if (babySteps[gamma] !== undefined) {
         const solution = i * m + babySteps[gamma];
         setResult(solution);
-        stepData.push([`Lösung gefunden bei i=${i}, j=${babySteps[gamma]}`, solution]);
+        stepData.push([
+          `Giant-Step (${i})`,
+          <span>
+            Lösung gefunden bei i={i}, j={babySteps[gamma]}
+          </span>,
+          solution,
+        ]);
         setSteps(stepData);
         return;
       }
+      const oldGamma = gamma;
       gamma = (gamma * inverseFactor) % p;
-      stepData.push([`Giant-Step: h* g^{-${i}m} mod ${p} = ${gamma}`, gamma]);
+      stepData.push([
+        `Giant-Step (${i})`,
+        <Katex texString={`h \\cdot \\gamma = ${h} \\cdot ${oldGamma} = ${gamma} \\mod{${p}}`} />,
+        gamma,
+      ]);
     }
 
     setResult(null);
-    stepData.push(["Keine Lösung gefunden", 0]);
+    stepData.push(["", <span>Keine Lösung gefunden</span>, 0]);
     setSteps(stepData);
   }, [g, h, p]);
 
@@ -123,12 +137,15 @@ export default function BabyStepGiantStep() {
           </li>
 
           <li>
-            Berechne den <span data-tooltip-id="tooltip-2">inversen Schritt:</span>
+            Berechne den <b data-tooltip-id="tooltip-2">inversen Schritt:</b>
             <Tooltip id="tooltip-2" className="max-w-xs" place="top">
               Der inverse Schritt wird im Giant-Step verwendet. Anstatt jedes Mal (<Katex texString="g^{-im} \mod p" />)
               von Grund auf zu berechnen, wird der Wert einmal berechnet und dann wiederholt verwendet.
             </Tooltip>{" "}
-            <Katex texString={`g^{-m} \\equiv ${g}^{-${Math.ceil(Math.sqrt(p))}} \\mod p \\equiv ${inverseFactor}`} />.
+            <Katex
+              texString={`g^{-m} \\equiv ${g}^{-${Math.ceil(Math.sqrt(p))}} \\mod p \\equiv ${inverseFactor} \\mod ${p}`}
+            />
+            .
           </li>
 
           <li>
@@ -143,7 +160,7 @@ export default function BabyStepGiantStep() {
             <b>Giant-Steps</b>: Für alle <Katex texString="i" /> wenn <Katex texString="0 \leq i < m" />:
             <ol className="list-decimal pl-5">
               <li>
-                Berechne <Katex texString={`\\gamma = h \\cdot g^{-im} \\mod p`} />. <br />
+                Berechne <Katex texString={`\\gamma = h \\cdot g^{-im} = h \\cdot \\gamma \\mod p`} />. <br />
                 Überprüfe, ob <Katex texString={`\\gamma`} /> in den Baby-Steps gefunden wurde.
               </li>
               <ol className="pl-5">
@@ -170,19 +187,37 @@ export default function BabyStepGiantStep() {
 
       {steps.length > 1 && (
         <div>
-          <Chart
-            chartType="ColumnChart"
-            width="100%"
-            height="400px"
-            data={steps}
-            options={{
-              title: "Berechnungsschritte",
-              showRowNumber: true,
-              legend: { position: "none" },
-              vAxis: { title: "Werte" },
-              hAxis: { title: "Schritte" },
-            }}
-          />
+          <details>
+            <summary>Schritte Anzeigen</summary>
+            {/* Darstellung als HTML-Tabelle */}
+            <table className="w-full table-auto border-collapse overflow-hidden rounded-lg border shadow-md">
+              <thead>
+                <tr className="bg-gray-200 text-left text-sm tracking-wide text-gray-600 uppercase dark:bg-gray-800 dark:text-gray-300">
+                  {steps[0].map((step, i) => (
+                    <th key={i} className="border border-gray-300 px-4 py-2 text-center">
+                      {step}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {steps.slice(1).map((step, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      index % 2 === 0 ? "bg-gray-100 dark:bg-gray-700" : "bg-white dark:bg-gray-600"
+                    } transition-all hover:bg-gray-300 dark:hover:bg-gray-500`}
+                  >
+                    {step.map((data, i) => (
+                      <td key={i} className="border border-gray-300 px-2 py-1 text-center">
+                        {data}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </div>
       )}
     </div>
