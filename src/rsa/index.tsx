@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import LabelInput from "../components/input/LabelInput";
 import Katex from "../components/katex";
 import * as math from "../utils/math";
@@ -9,51 +9,31 @@ export default function RsaPage() {
   const [e, setE] = useState<number>(7);
   const [message, setMessage] = useState<number>(5);
 
-  const [cipher, setCipher] = useState<number>();
-  const [decrypted, setDecrypted] = useState<number>();
+  const n = useMemo<number>(() => p * q, [p, q]);
+  const lambdaN = useMemo<number>(() => math.lcm(p - 1, q - 1), [p, q]);
+  const d = useMemo<number>(() => math.extendedEuclideanAlgorithm(e, lambdaN), [e, lambdaN]);
 
-  const [n, setN] = useState<number>(0);
-  useEffect(() => {
-    setN(p * q);
-  }, [p, q]);
+  const cipher = useMemo<number>(() => {
+    if (math.gcd(e, lambdaN) !== 1) {
+      return 0;
+    }
 
-  const [lambdaN, setLambdaN] = useState<number>(0);
-  useEffect(() => {
-    setLambdaN(math.lcm(p - 1, q - 1));
-  }, [p, q]);
-
-  const [d, setD] = useState<number>(0);
-  useEffect(() => {
-    setD(math.modInverse(e, lambdaN));
-  }, [e, lambdaN]);
-
-  useEffect(() => {
-    const handleEncrypt = () => {
-      if (math.gcd(e, lambdaN) !== 1) {
-        return;
-      }
-
-      const encrypted = math.modPow(message, e, n);
-      setCipher(encrypted);
-    };
-
-    handleEncrypt();
+    const encrypted = math.modPow(message, e, n);
+    return encrypted;
   }, [e, n, lambdaN, message]);
 
-  const handleDecrypt = useCallback(() => {
+  const decrypted = useMemo<number>(() => {
     if (d === 0) {
-      return;
+      return 0;
     }
 
     if (cipher) {
       const decryptedMessage = math.modPow(cipher, d, n);
-      setDecrypted(decryptedMessage);
+      return decryptedMessage;
+    } else {
+      return 0;
     }
   }, [cipher, d, n]);
-
-  useEffect(() => {
-    handleDecrypt();
-  }, [cipher, handleDecrypt]);
 
   return (
     <div className="flex max-w-2xl flex-col space-y-5">
@@ -64,14 +44,14 @@ export default function RsaPage() {
           <div className="flex space-x-2">
             <h2 className="mr-5 self-center text-xl font-bold">1.</h2>
             <LabelInput
-              label="Primzahl p"
+              label="p (Primzahl)"
               value={p}
               onChange={(e) => setP(parseInt(e.target.value))}
               type="number"
               isValid={math.isPrime(p)}
             />
             <LabelInput
-              label="Primzahl q"
+              label="q (Primzahl)"
               value={q}
               onChange={(e) => setQ(parseInt(e.target.value))}
               type="number"
@@ -100,9 +80,14 @@ export default function RsaPage() {
                 value={e}
                 onChange={(e) => setE(parseInt(e.target.value))}
                 type="number"
-                isValid={math.gcd(e, lambdaN) === 1 && 1 < e && e < lambdaN && math.modInverse(e, lambdaN) !== 0}
+                isValid={
+                  math.gcd(e, lambdaN) === 1 &&
+                  1 < e &&
+                  e < lambdaN &&
+                  math.extendedEuclideanAlgorithm(e, lambdaN) !== 0
+                }
               />
-              {math.modInverse(e, lambdaN) === 0 && (
+              {math.extendedEuclideanAlgorithm(e, lambdaN) === 0 && (
                 <text className="text-red-500">Kein modulares Inverses gefunden.</text>
               )}
               {math.gcd(e, lambdaN) !== 1 && <text className="text-red-500">e und λ(n) sind nicht teilerfremd.</text>}

@@ -26,6 +26,9 @@ export default function Instance({
   p,
   g,
 }: InstanceProps): React.JSX.Element {
+  const ownDigit = name === "Alice" ? "a" : "b";
+  const otherDigit = name === "Alice" ? "b" : "a";
+
   return (
     <div className="w-full rounded-2xl border border-neutral-200 p-5 shadow-md dark:border-neutral-800">
       <h2 className="mb-3 text-2xl font-bold">{name}</h2>
@@ -33,31 +36,31 @@ export default function Instance({
         <li>
           <span className="font-semibold">Privater Schlüssel:</span>
           <br />
-          <Katex texString={`a = ${privateKey}`} />
+          <Katex texString={`${ownDigit.toLowerCase()} = ${privateKey}`} />
         </li>
         <li>
           <span className="font-semibold">Öffentlicher Schlüssel:</span>
           <br />
-          <Katex texString={`A = g^{a} \\mod p `} />
+          <Katex texString={`${ownDigit.toUpperCase()} = g^{${ownDigit.toLowerCase()}} \\mod p `} />
           <Katex texString={`= ${g}^{${privateKey}} \\mod ${p}`} />
           <Katex texString={`= ${publicKey}`} />
         </li>
         <li>
           <span className="font-semibold">
-            Sende <strong>A</strong>:
+            Sende <strong>{ownDigit.toUpperCase()}</strong>:
           </span>
           <br />
-          <Katex texString={`A = ${publicKey}`} />
+          <Katex texString={`${ownDigit.toUpperCase()} = ${publicKey}`} />
         </li>
         <li>
           <span className="font-semibold">Öffentlichen Schlüssel empfangen:</span>
           <br />
-          <Katex texString={`B = ${otherPublicKey}`} />
+          <Katex texString={`${otherDigit.toUpperCase()} = ${otherPublicKey}`} />
         </li>
         <li>
           <span className="font-semibold">Gemeinsamen Schlüssel berechnen:</span>
           <br />
-          <Katex texString={`s = B^{a} \\mod{p}`} />
+          <Katex texString={`s = ${otherDigit.toUpperCase()}^{${ownDigit.toLowerCase()}} \\mod{p}`} />
           <Katex texString={`= ${otherPublicKey}^{${privateKey}} \\mod ${p}`} />
           <Katex texString={`= ${sharedSecret}`} />
         </li>

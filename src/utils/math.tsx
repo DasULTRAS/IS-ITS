@@ -70,7 +70,7 @@ export function lcm(a: number, b: number): number {
  * @param phi - The modulus.
  * @returns The modular multiplicative inverse of e modulo phi.
  */
-export function modInverse(e: number, phi: number): number {
+export function extendedEuclideanAlgorithm(e: number, phi: number): number {
   const m0 = phi;
   let y = 0,
     x = 1;
